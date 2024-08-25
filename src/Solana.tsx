@@ -10,7 +10,7 @@ const Solana: React.FC = () => {
   const fetchBalance = async () => {
     try {
       const connection = new Connection("https://docs-demo.solana-mainnet.quiknode.pro/");
-      
+
       if (!publicKey) {
         throw new Error("Public key is required");
       }
@@ -22,7 +22,11 @@ const Solana: React.FC = () => {
       setBalance(formattedBalance);
       setError(null);
     } catch (err) {
-      setError(`Failed to fetch balance: ${err.message}`);
+      if (err instanceof Error) {
+        setError(`Failed to fetch balance: ${err.message}`);
+      } else {
+        setError(`Failed to fetch balance: ${String(err)}`);
+      }
       setBalance(null);
       console.error("Error fetching balance:", err);
     }
@@ -37,10 +41,10 @@ const Solana: React.FC = () => {
     <div className="p-4">
       <div className="flex items-center place-content-center">
         <img
-          className="h-14 mr-4 w-auto  blur-sm"
+          className="h-14 mr-4 w-auto blur-sm"
           src="https://imgs.search.brave.com/mgW2QFWkpw3s92nw50gvVYuzid-Gx4B0lTLv8dWxaq8/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pY29u/cy5pY29uYXJjaGl2/ZS5jb20vaWNvbnMv/Y2pkb3duZXIvY3J5/cHRvY3VycmVuY3kt/ZmxhdC81MTIvRXRo/ZXJldW0tRVRILWlj/b24ucG5n"
         ></img>
-        <h1 className="w-min text-6xl font-extrabold cent ">WhatTheBlock</h1>
+        <h1 className="w-min text-6xl font-extrabold">WhatTheBlock</h1>
         <img
           className="h-14 ml-4 w-auto rounded-100% animate-pulse"
           src="https://imgs.search.brave.com/vA8y8wGcYOsbDE5mHwviKnyY052sS6irnHtcp5PQQAQ/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9zdHls/ZXMucmVkZGl0bWVk/aWEuY29tL3Q1X2hj/czJuL3N0eWxlcy9j/b21tdW5pdHlJY29u/X2o3M3U0ODU2MXk2/ODEucG5n"
@@ -53,7 +57,7 @@ const Solana: React.FC = () => {
           src="https://imgs.search.brave.com/vA8y8wGcYOsbDE5mHwviKnyY052sS6irnHtcp5PQQAQ/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9zdHls/ZXMucmVkZGl0bWVk/aWEuY29tL3Q1X2hj/czJuL3N0eWxlcy9j/b21tdW5pdHlJY29u/X2o3M3U0ODU2MXk2/ODEucG5n"
         ></img>
 
-        <div className="border-2 w-1/2 p-10 mt-16  border-purple-500 border-4 rounded-2xl justify-center">
+        <div className=" w-1/2 p-10 mt-16 border-purple-500 border-4 rounded-2xl justify-center">
           <div>
             <form onSubmit={handleSubmit} className="mt-4">
               <input
@@ -66,16 +70,16 @@ const Solana: React.FC = () => {
               />
               <button
                 type="submit"
-                className="bg-gradient-to-r from-purple-600 via-blue-500 to-green-400  text-white p-2 rounded ml-20"
+                className="bg-gradient-to-r from-purple-600 via-blue-500 to-green-400 text-white p-2 rounded ml-20"
               >
                 Check Balance
               </button>
             </form>
           </div>
           <div className="mt-10 font-semibold text-xl flex">
-            Balance :
+            Balance:
             {error && (
-              <div className="text-red-500 mt-2">Error in fetching balance.</div>
+              <div className="text-red-500 mt-2">{error}</div>
             )}
             {balance !== null && !error && (
               <div className="ml-4">{balance} SOL</div>
@@ -88,3 +92,4 @@ const Solana: React.FC = () => {
 };
 
 export default Solana;
+

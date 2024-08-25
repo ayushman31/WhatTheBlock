@@ -1,5 +1,4 @@
 import React from 'react';
-import WalletBalance from './Ethereum';
 import './App.css';
 import Landing from './Landing';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';

@@ -9,7 +9,7 @@ const Ethereum: React.FC = () => {
 
   const fetchBalance = async () => {
     try {
-      const apiKey = "";
+      const apiKey = ""; // Replace with your actual Alchemy API key
       const settings = {
         apiKey: apiKey,
       };
@@ -20,23 +20,29 @@ const Ethereum: React.FC = () => {
         throw new Error("Public key is required");
       }
 
-      let resolvedAddress = publicKey;
+      let resolvedAddress: string = publicKey;
 
-      if (publicKey.includes(".")) {
-        resolvedAddress = await alchemy.core.resolveName(publicKey);
-
-        if (!resolvedAddress) {
+      // Check if the publicKey is an ENS name (basic check)
+      if (publicKey.includes(".eth")) {
+        const resolved = await alchemy.core.resolveName(publicKey);
+        if (resolved) {
+          resolvedAddress = resolved;
+        } else {
           throw new Error("ENS name could not be resolved");
         }
       }
 
-      let rawBalance = await alchemy.core.getBalance(resolvedAddress, "latest");
-      let formattedBalance = Utils.formatEther(rawBalance);
+      const rawBalance = await alchemy.core.getBalance(resolvedAddress, "latest");
+      const formattedBalance = Utils.formatEther(rawBalance);
 
       setBalance(formattedBalance);
       setError(null);
     } catch (err) {
-      setError(`Failed to fetch balance: ${err.message}`);
+      if (err instanceof Error) {
+        setError(`Failed to fetch balance: ${err.message}`);
+      } else {
+        setError(`Failed to fetch balance: ${String(err)}`);
+      }
       setBalance(null);
       console.error("Error fetching balance:", err);
     }
@@ -48,30 +54,26 @@ const Ethereum: React.FC = () => {
   };
 
   return (
-    
     <div className="p-4">
       <div className="flex items-center place-content-center">
         <img
           className="h-14 mr-4 w-auto animate-pulse"
           src="https://imgs.search.brave.com/mgW2QFWkpw3s92nw50gvVYuzid-Gx4B0lTLv8dWxaq8/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pY29u/cy5pY29uYXJjaGl2/ZS5jb20vaWNvbnMv/Y2pkb3duZXIvY3J5/cHRvY3VycmVuY3kt/ZmxhdC81MTIvRXRo/ZXJldW0tRVRILWlj/b24ucG5n"
         ></img>
-        <h1 className="w-min text-6xl font-extrabold cent ">WhatTheBlock</h1>
+        <h1 className="w-min text-6xl font-extrabold">WhatTheBlock</h1>
         <img
-          className="h-14 ml-4 w-auto rounded-100%  blur-sm"
+          className="h-14 ml-4 w-auto rounded-100% blur-sm"
           src="https://imgs.search.brave.com/vA8y8wGcYOsbDE5mHwviKnyY052sS6irnHtcp5PQQAQ/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9zdHls/ZXMucmVkZGl0bWVk/aWEuY29tL3Q1X2hj/czJuL3N0eWxlcy9j/b21tdW5pdHlJY29u/X2o3M3U0ODU2MXk2/ODEucG5n"
         ></img>
       </div>
 
-
-        <div className="flex items-center place-content-center mt-32">
-
+      <div className="flex items-center place-content-center mt-32">
         <img
           className="mr-32 w-auto h-56 duration-500 hover:brightness-110"
           src="https://imgs.search.brave.com/mgW2QFWkpw3s92nw50gvVYuzid-Gx4B0lTLv8dWxaq8/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pY29u/cy5pY29uYXJjaGl2/ZS5jb20vaWNvbnMv/Y2pkb3duZXIvY3J5/cHRvY3VycmVuY3kt/ZmxhdC81MTIvRXRo/ZXJldW0tRVRILWlj/b24ucG5n"
         ></img>
 
-      <div className="border-2 w-1/2 p-10 mt-16 border-blue-500 border-4 rounded-2xl  justify-center">
-        <div>
+        <div className=" w-1/2 p-10 mt-16 border-blue-500 border-4 rounded-2xl justify-center">
           <form onSubmit={handleSubmit} className="mt-4">
             <input
               type="text"
@@ -83,21 +85,20 @@ const Ethereum: React.FC = () => {
             />
             <button
               type="submit"
-              className=" bg-blue-500 text-white p-2 rounded ml-20"
+              className="bg-blue-500 text-white p-2 rounded ml-20"
             >
               Check Balance
             </button>
           </form>
-        </div>
-        <div className="mt-10 font-semibold text-xl flex">
-          Balance :
-          {error && (
-            <div className="text-red-500 mt-2">Error in fetching balance.</div>
-          )}
-          {balance !== null && !error && <div className="ml-4">{balance} ETH </div>}
+          <div className="mt-10 font-semibold text-xl flex">
+            Balance:
+            {error && (
+              <div className="text-red-500 mt-2">{error}</div>
+            )}
+            {balance !== null && !error && <div className="ml-4">{balance} ETH</div>}
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };
