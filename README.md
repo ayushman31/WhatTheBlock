@@ -48,3 +48,7 @@ export default tseslint.config({
   },
 })
 ```
+
+
+For Ethereum I have used Alchemy
+For Solana I have used @solana/web3.js
