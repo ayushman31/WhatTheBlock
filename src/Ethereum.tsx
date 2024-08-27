@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Alchemy, Utils } from "alchemy-sdk";
-import "./App.css"; // Ensure this file includes Tailwind directives
+import "./App.css"; 
 
 const Ethereum: React.FC = () => {
   const [publicKey, setPublicKey] = useState<string>("");
@@ -9,7 +9,7 @@ const Ethereum: React.FC = () => {
 
   const fetchBalance = async () => {
     try {
-      const apiKey = ""; // Replace with your actual Alchemy API key
+      const apiKey = ""; 
       const settings = {
         apiKey: apiKey,
       };

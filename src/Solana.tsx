@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Connection, PublicKey } from "@solana/web3.js";
-import "./App.css"; // Ensure this file includes Tailwind directives
+import "./App.css"; 
 
 const Solana: React.FC = () => {
   const [publicKey, setPublicKey] = useState<string>("");

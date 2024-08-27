@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import "./App.css"; // Ensure this file includes Tailwind directives
+import "./App.css"; 
 
 const Landing: React.FC = () => {
   return (
